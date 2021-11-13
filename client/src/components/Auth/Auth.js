@@ -48,7 +48,6 @@ const Auth = () => {
     setShowpassword(false);
   };
   const googleSuccess = (res) => {
-    console.log(res);
     const result = res?.profileObj;
     const token = res?.tokenId;
     try {

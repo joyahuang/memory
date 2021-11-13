@@ -12,7 +12,6 @@ const Auth = async (req, res, next) => {
     if (token && isCustomAuth) {
       //if this token is our own token
       decodedData = jwt.verify(token, "test");
-      console.log(decodedData);
       req.userId = decodedData?.id;
     } else {
       //if this token is google token

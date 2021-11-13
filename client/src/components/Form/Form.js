@@ -41,7 +41,6 @@ const Form = ({ currentId, setCurrentId }) => {
     }
     clear();
   };
-  console.log(user);
   if (!user?.result.name) {
     return (
       <Paper className={classes.paper}>
