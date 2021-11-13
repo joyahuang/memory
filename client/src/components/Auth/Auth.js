@@ -11,23 +11,41 @@ import Icon from "./icon";
 
 import { GoogleLogin } from "react-google-login";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import useStyles from "./style";
 import Input from "./Input";
+import { signin, signup } from "../../actions/auth";
+const initialState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 const Auth = () => {
   const classes = useStyles();
-  const [showPassword, setShowpassord] = useState(false);
+  const [showPassword, setShowpassword] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
+  const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
-  const history = useNavigate();
-  const handleSubmit = () => {};
-  const handleChange = () => {};
+  const history = useHistory();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isSignup) {
+      dispatch(signup(formData, history));
+    } else {
+      dispatch(signin(formData, history));
+    }
+  };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
   const handleShowPassword = () =>
-    setShowpassord((prevShowPassword) => !prevShowPassword);
+    setShowpassword((prevShowPassword) => !prevShowPassword);
   const switchMode = () => {
     setIsSignup((prevIsSignup) => !prevIsSignup);
-    handleShowPassword(false);
+    setShowpassword(false);
   };
   const googleSuccess = (res) => {
     console.log(res);
@@ -35,7 +53,7 @@ const Auth = () => {
     const token = res?.tokenId;
     try {
       dispatch({ type: "AUTH", data: { result, token } });
-      history("/");
+      history.push("/");
     } catch (error) {
       console.log(error);
     }
@@ -64,8 +82,8 @@ const Auth = () => {
                   half
                 ></Input>
                 <Input
-                  name="firstName"
-                  label="First Name"
+                  name="lastName"
+                  label="Last Name"
                   handleChange={handleChange}
                   half
                 ></Input>
@@ -89,7 +107,7 @@ const Auth = () => {
                 name="confirmPassword"
                 label="Repeat Password"
                 handleChange={handleChange}
-                type="passoword"
+                type="password"
               ></Input>
             )}
           </Grid>
