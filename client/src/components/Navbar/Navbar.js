@@ -19,7 +19,7 @@ const Navbar = () => {
     const token = user?.token;
     if (token) {
       const decodedToken = decode(token);
-      if (decode.exp * 1000 < new Date().getTime) {
+      if (decodedToken.exp * 1000 < new Date().getTime) {
         logout();
       }
     }
