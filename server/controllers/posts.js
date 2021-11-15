@@ -8,6 +8,12 @@ export const getPosts = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+export const getPostsBySearch = async (req, res) => {
+  const { searchQuery, tags } = req.query;
+  try {
+    const title = new RegExp(searchQuery);
+  } catch (error) {}
+};
 export const createPosts = async (req, res) => {
   const post = req.body;
   const newPost = new PostMessage({

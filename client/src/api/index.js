@@ -1,6 +1,7 @@
 import axios from "axios";
-// const url = "https://memory-for-me.herokuapp.com/posts";
-const API = axios.create({ baseURL: "https://memory-for-me.herokuapp.com/" });
+const url = "http://localhost:5000/";
+// const url = "https://memory-for-me.herokuapp.com/";
+const API = axios.create({ baseURL: url });
 API.interceptors.request.use((req) => {
   if (localStorage.getItem("profile")) {
     req.headers.Authorization = `Bearer ${
@@ -11,6 +12,12 @@ API.interceptors.request.use((req) => {
 });
 
 export const fetchPosts = () => API.get("/posts");
+export const fetchPostsBySearch = (searchQuery) =>
+  API.get(
+    `/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${
+      searchQuery.tags
+    }`
+  );
 export const createPost = (newPost) => API.post("/posts", newPost);
 export const updatePost = (id, updatedPost) =>
   API.patch(`/posts/${id}`, updatedPost);
