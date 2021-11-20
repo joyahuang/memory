@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Posts from "../Posts/Posts";
 import Form from "../Form/Form";
 import Pagination from "../Pagination/Pagination";
@@ -14,7 +14,6 @@ import {
 import { useHistory, useLocation } from "react-router-dom";
 import ChipInput from "material-ui-chip-input";
 import { useDispatch } from "react-redux";
-import { getPosts } from "../../actions/posts";
 import { getPostBySearch } from "../../actions/posts";
 import { mergeClasses } from "@material-ui/styles";
 import useStyes from "./style";
@@ -31,10 +30,6 @@ const Home = () => {
   const searchQuery = query.get("searchQuery");
   const dispatch = useDispatch();
   const classes = useStyes();
-  useEffect(() => {
-    dispatch(getPosts());
-    console.info("getting postssss");
-  }, [currentId, dispatch]);
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState([]);
   const handleKeyPress = (e) => {
@@ -43,13 +38,19 @@ const Home = () => {
       searchPost();
     }
   };
-  const handleAdd = (tag) => setTags([...tags, tag]);
+  const handleAdd = (tag) => {
+    const newtags = [...tags, tag];
+    setTags(newtags);
+  };
   const handleDelete = (tagToDelete) =>
     setTags(tags.filter((tag) => tag != tagToDelete));
   const searchPost = () => {
-    if (search.trim()) {
+    if (search.trim() || tags) {
       // dispatch -> fetch search post
       dispatch(getPostBySearch({ search, tags: tags.join(",") }));
+      history.push(
+        `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(",")}`
+      );
     } else {
       history.push("/");
     }
@@ -87,8 +88,8 @@ const Home = () => {
               <ChipInput
                 style={{ margin: "10px 0" }}
                 value={tags}
-                onAdd={handleAdd}
-                onDelete={handleDelete}
+                onAdd={(tag) => handleAdd(tag)}
+                onDelete={(tag) => handleDelete(tag)}
                 label="Search Tags"
                 variant="outlined"
               ></ChipInput>
@@ -97,18 +98,16 @@ const Home = () => {
                 className={classes.search}
                 color="primary"
                 variant="contained"
-              ></Button>
+              >
+                Search
+              </Button>
             </AppBar>
-            <Form
-              currentId={currentId}
-              setCurrentId={setCurrentId}
-              onAdd={handleAdd}
-              onDelete={handleDelete}
-              label="Search Tags"
-              variant="outlined"
-            ></Form>
+            <Form currentId={currentId} setCurrentId={setCurrentId}></Form>
             <Paper elevation={6}>
-              <Pagination></Pagination>
+              <Pagination
+                className={classes.pagination}
+                page={page}
+              ></Pagination>
             </Paper>
           </Grid>
         </Grid>
