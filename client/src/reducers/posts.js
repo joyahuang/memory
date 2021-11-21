@@ -7,6 +7,7 @@ import {
   FETCH_BY_SEARCH,
   START_LOADING,
   END_LOADING,
+  COMMENT,
 } from "../constants/actionTypes";
 const reducer = (state = { isLoading: true, posts: [] }, action) => {
   switch (action.type) {
@@ -41,6 +42,17 @@ const reducer = (state = { isLoading: true, posts: [] }, action) => {
         ...state,
         posts: state.posts.filter((post) => post._id !== action.payload),
       };
+    case COMMENT: {
+      return {
+        ...state,
+        posts: state.posts.map((post) => {
+          // return all other posts normally
+          // change the post that just received comment
+          if (post._id === action.payload._id) return action.payload;
+          return post;
+        }),
+      };
+    }
     default:
       return { ...state, posts: state.posts };
   }

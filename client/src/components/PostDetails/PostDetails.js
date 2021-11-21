@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useParams, useHistory } from "react-router-dom";
 import useStyles from "./style";
+import CommentSection from "./CommentSection";
 const PostDetails = () => {
   const { post, posts, isLoading } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
@@ -65,9 +66,7 @@ const PostDetails = () => {
             <strong>Realtime Chat - coming soon!</strong>
           </Typography>
           <Divider style={{ margin: "20px 0" }} />
-          <Typography variant="body1">
-            <strong>Comments - coming soon!</strong>
-          </Typography>
+          <CommentSection post={post}></CommentSection>
           <Divider style={{ margin: "20px 0" }} />
         </div>
         <div className={classes.imageSection}>
